@@ -19,3 +19,4 @@ audit_state.json
 audit_state.tmp
 flagged_tweets.csv
 data/
+main.py
