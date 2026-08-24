@@ -59,10 +59,11 @@ class AuditStateManager:
         """write state to disk safely using a temporary file pattern to avoid corruption."""
         temp_file = self.state_file.with_suffix(".tmp")
         try:
+
             with open(temp_file, "w", encoding="utf-8") as f:
                 json.dump({"results": self.results}, f, ensure_ascii=False, indent=4)
                 #atomic rename prevents partial writes from corrupting the state file
-                os.replace(temp_file, self.state_file)
+            os.replace(temp_file, self.state_file)
         except Exception as e:
             logger.error(f"Failed to persist state to {self.state_file}: {e}")
             if temp_file.exists():
