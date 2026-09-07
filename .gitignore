@@ -1,0 +1,22 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+.env
+
+# Environment variables & API keys
+.env
+
+# Python cache & artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local audit output & raw personal data
+audit_state.json
+audit_state.tmp
+flagged_tweets.csv
+data/
+main.py
