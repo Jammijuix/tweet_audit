@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-from scr.evaluator import evaluate_tweet
+from scr.evaluator import evaluate_tweet, select_personal_brand_category
 from scr.parser import parse_archive
 from scr.state import AuditStateManager
 
@@ -37,7 +37,7 @@ def export_flagged_tweets_to_csv(
             writer.writerows(flagged_rows)
 
         logger.info(f"Sucessfully exported {len(flagged_rows)} flaged tweets to {output_file.resolve()}")
-
+        return len(flagged_rows)
     except Exception as e:
         logger.error(f"Failde to export flagged tweets to csv: {e}")
         return 0
@@ -53,6 +53,10 @@ def run_audit(
     """Main orchestration pipeline:
     Streams archive -> Checks state -> Audits with Gemini -> Saves state -> Exports CSV.
     """
+    # 1. Ask the user in the CLI ONCE here
+    chosen_persona = select_personal_brand_category()
+    logger.info(f"Running audit using persona: {chosen_persona}")
+
     path = Path(archive_path)
     if not path.exists():
         logger.error(f"Archive file not found.")
@@ -78,7 +82,7 @@ def run_audit(
 
             #call Gemini evaluator with error isolation
             try:
-                result = evaluate_tweet(tweet)
+                result = evaluate_tweet(tweet, persona=chosen_persona)
                 state_manager.save_result(tweet.id, tweet.full_text, result)
 
                 status = "FLAGGED" if result.flagged else "PASSED"
@@ -123,6 +127,6 @@ def run_audit(
 if __name__ == "__main__":
     # Test batch run on your archive file
     ARCHIVE_FILE = Path("data/tweets.js")
-    run_audit(ARCHIVE_FILE, max_tweets=10)
+    run_audit(ARCHIVE_FILE, max_tweets=15)
 
 
