@@ -71,7 +71,7 @@ Clone the repository and set up a virtual environment:
 
 ```powershell
 # Clone the repository
-git clone https://github.com/your-username/tweet_audit.git
+git clone https://github.com/jammijuix/tweet_audit.git
 cd tweet_audit
 
 # Create and activate virtual environment
